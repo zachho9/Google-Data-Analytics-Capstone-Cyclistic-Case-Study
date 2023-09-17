@@ -1,5 +1,5 @@
 # Google-Data-Analytics-Capstone-Cyclistic-Case-Study
-## Project Title: Cyclistic Bike-Share Analysis Case Study
+### Project Title: Cyclistic Bike-Share Analysis Case Study
 
 #### 1. Business Task, Data Preparation, Data Process, Data Analysis with SQL
 [Cyclistic Case Study.md](https://github.com/zachho9/Google-Data-Analytics-Capstone-Cyclistic-Case-Study/blob/main/Cyclistic%20Case%20Study.md)
