@@ -1,0 +1,90 @@
+---
+title: "Cyclistic Case Study Viz"
+---
+
+## 1. Load library
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+```
+
+## 2. Plot the number of bike types
+```{r}
+numbers_bike_types <- data.frame(read_csv("numbers_bike_types.csv"))
+```
+
+```{r}
+ggplot(data=numbers_bike_types, aes(x=rideable_type, y=total_num))+
+  geom_bar(stat="identity", fill="steelblue")+
+  labs(title="Total Number for 3 Bike Types")
+```
+
+## 3. Plot members preference for different bike types
+```{r}
+bike_types_members <- data.frame(read_csv("bike_types_members.csv"))
+bike_types_members
+```
+
+```{r}
+bike_types_members_long <- data.frame(pivot_longer(data=bike_types_members, cols=c('electric_bike', 'classic_bike', 'docked_bike'), names_to='bike_type', values_to='num_users'))
+bike_types_members_long
+```
+
+
+```{r}
+# reorder bike_type based on descending order of num_users
+bike_types_members_long$bike_type_reorder <- reorder(bike_types_members_long$bike_type, -bike_types_members_long$num_users)
+bike_types_members_long
+```
+
+
+```{r}
+ggplot(bike_types_members_long) + 
+  geom_line(mapping=aes(x=bike_type_reorder, y=num_users, group=member_type, color=member_type)) + 
+  labs(title="Members Preference for 3 Bike Types")
+```
+
+
+## 4. Plot ride length for different member type
+```{r}
+ride_length_member <- data.frame(read_csv("ride_length_member.csv"))
+```
+
+```{r}
+ggplot(data=ride_length_member, aes(x=member_type, y=avg_ride_length))+
+  geom_bar(stat="identity", fill="steelblue")+
+  labs(title="Average Ride Length for Different Member Type")
+```
+
+## 5. Plot weekday frequency for two types of users
+```{r}
+weekday_freq_casual <- data.frame(read_csv("weekday_freq_casual.csv"))
+colnames(weekday_freq_casual)[2] <- "frequency_weekday"
+weekday_freq_casual
+
+weekday_freq_annual <- data.frame(read_csv("weekday_freq_annual.csv"))
+colnames(weekday_freq_annual)[2] <- "frequency_weekday"
+weekday_freq_annual
+```
+
+
+```{r}
+# Combine the two data frames
+weekday_freq_combined <- rbind(
+  transform(weekday_freq_casual, group="Casual"),
+  transform(weekday_freq_annual, group="Annual")
+)
+weekday_freq_combined
+```
+
+
+```{r}
+ggplot(weekday_freq_combined, aes(x=factor(day_of_week), y=frequency_weekday, group=group, color=group)) +
+  geom_line() +
+  labs(title="Weekday Frequencies Casual vs. Annual", x="Day of Week", y="Frequency") +
+  scale_x_discrete(labels=c("1"="Sun", "2"="Mon", "3"="Tue", "4"="Wed", "5"="Thu", "6"="Fri", "7"="Sat")) +
+  scale_color_manual(values=c("Casual"="orange", "Annual"="steelblue")) +
+  theme_minimal()
+```
+
